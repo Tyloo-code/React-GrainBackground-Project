@@ -3,7 +3,7 @@ import {withRouter} from 'react-router-dom'
 import { Modal} from 'antd'
 
 import LinkButton from '../link-button'
-import {reqWeather} from '../../api'
+import {reqWeather, gaoIp, gaoWeather} from '../../api'
 import menuList from '../../config/menuConfig'
 import {formateDate} from '../../utils/dateUtils'
 import memoryUtils from '../../utils/memoryUtils'
@@ -31,7 +31,15 @@ class Header extends Component {
 
   getWeather = async () => {
     // 调用接口请求异步获取数据
-    const {dayPictureUrl, weather} = await reqWeather('北京')
+    // const {dayPictureUrl, weather} = await reqWeather('北京')
+    const dayPictureUrl = 'http://lxy.bjfu.edu.cn/images/sys2.png'
+    const KEY = 'd283c0fc436c1af98c9513d60ccf8467';
+    const data = await gaoIp(KEY)
+    // console.log('ip#########',data.adcode);
+    const myWeather = await gaoWeather(KEY,data.adcode)
+    // console.log('tianqi#########',myWeather.lives[0]);
+    let weather = myWeather.lives[0].weather;
+    // console.log(weather);
     // 更新状态
     this.setState({dayPictureUrl, weather})
   }

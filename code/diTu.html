@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+  <title>高德地图Api</title>
+  <style>
+    #container {
+      width: 800px;
+      height: 600px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="container"></div>
+  <div class="info">
+    <p id='info'></p>
+  </div>
+  <div class="info">
+    <p id='weather'></p>
+  </div>
+  <script type="text/javascript">
+    window._AMapSecurityConfig = {
+      securityJsCode: 'f3a5197a1b2ae7f17e66b8bda3207af5',
+    }
+  </script>
+  <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.15&key=3efd745b112b7e0995289b0615482389">
+  </script>
+
+  <script type="text/javascript">
+    var map = new AMap.Map("container", {
+      resizeEnable: true,
+      center: [116.397428, 39.90923],
+      zoom: 13
+    });
+    //实时路况图层
+    var trafficLayer = new AMap.TileLayer.Traffic({
+      zIndex: 10
+    });
+    map.add(trafficLayer); //添加图层到地图
+
+
+    AMap.plugin('AMap.CitySearch', function () {
+      var citySearch = new AMap.CitySearch()
+      citySearch.getLocalCity(function (status, result) {
+        if (status === 'complete' && result.info === 'OK') {
+          if (result && result.city && result.bounds) {
+            var cityInfo = result.city;
+            var cityBounds = result.bounds;
+            document.getElementById('info').innerHTML = '您当前所在城市：' + cityInfo;
+            map.setBounds(cityBounds);
+          } else {
+            document.getElementById('info').innerHTML = result.info;
+          }
+        }
+      })
+    })
+
+    //加载天气查询插件
+    AMap.plugin('AMap.Weather', function () {
+      //创建天气查询实例
+      var weather = new AMap.Weather();
+      //执行实时天气信息查询
+      weather.getLive('北京市', function (err, data) {
+        document.getElementById('weather').innerHTML = '您当前所在城市天气：' + data.weather;
+      });
+    });
+  </script>
+
+</body>
+
+</html>

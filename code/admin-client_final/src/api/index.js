@@ -79,6 +79,12 @@ export const reqDeleteUser = (userId) => ajax(BASE + '/manage/user/delete', {use
 // 添加/更新用户
 export const reqAddOrUpdateUser = (user) => ajax(BASE + '/manage/user/'+(user._id ? 'update' : 'add'), user, 'POST')
 
+
+// 高德地图请求位置API
+export const gaoIp = (key) => ajax(BASE + 'https://restapi.amap.com/v3/ip?', {key})
+// 高德地图请求天气API
+export const gaoWeather = (key, city) => ajax(BASE + `https://restapi.amap.com/v3/weather/weatherInfo?city=${city}&key=${key}`)
+
 /*
 json请求的接口请求函数
  */
